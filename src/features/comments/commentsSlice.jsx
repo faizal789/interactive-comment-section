@@ -1,23 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import data from '../../../data.json'
-const initialState = {
-  commentsData: {},
-  isLoading: true,
-};
+import { createSlice } from "@reduxjs/toolkit";
+import data from "../../../data.json";
 
-export const getCommentsData = createAsyncThunk(
-  "comment/getCommentsData",
-  async () => {
-    try {
-      const resp = await fetch('/interactive-comment-section/data.json');
-      const data = await resp.json();
-      // console.log(da)
-      return data;
-    } catch (error) {
-      console.error(error)
-    }
-  }
-);
+const initialState = {
+  commentsData: data,
+};
 
 export const commentSlice = createSlice({
   name: "comments",
@@ -27,7 +13,7 @@ export const commentSlice = createSlice({
       const userComment = {
         id: Date.now(),
         content: action.payload,
-        createdAt: 'now',
+        createdAt: "now",
         score: 0,
         user: {
           image: {
@@ -59,7 +45,7 @@ export const commentSlice = createSlice({
       const userReply = {
         id: Date.now(),
         content: replyValue,
-        createdAt: 'now',
+        createdAt: "now",
         score: 0,
         replyingTo: username,
         user: {
@@ -85,26 +71,12 @@ export const commentSlice = createSlice({
     },
 
     removeReply: (state, action) => {
-      const {commentIndex,replyId} = action.payload;
+      const { commentIndex, replyId } = action.payload;
       state.commentsData.comments[commentIndex].replies =
         state.commentsData.comments[commentIndex].replies.filter(
           (reply) => reply.id !== replyId
         );
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(getCommentsData.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getCommentsData.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.commentsData = action.payload;
-      })
-      .addCase(getCommentsData.rejected, (state, action) => {
-        state.isLoading = false;
-        console.log(action);
-      });
   },
 });
 
