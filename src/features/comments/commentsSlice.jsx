@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import data from '../../../data.json'
 const initialState = {
   commentsData: {},
   isLoading: true,
@@ -8,11 +9,12 @@ export const getCommentsData = createAsyncThunk(
   "comment/getCommentsData",
   async () => {
     try {
-      const resp = await fetch("../../../data.json");
+      const resp = await fetch('/interactive-comment-section/data.json');
       const data = await resp.json();
+      // console.log(da)
       return data;
     } catch (error) {
-      console.log(error);
+      console.error(error)
     }
   }
 );
